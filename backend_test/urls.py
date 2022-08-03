@@ -21,4 +21,5 @@ from .utils.healthz import healthz
 urlpatterns = [
     path("healthz", healthz, name="healthz"),
     path("login", auth_views.LoginView.as_view(), name="login"),
+    path("logout", auth_views.LogoutView.as_view(), name="logout"),
 ]
