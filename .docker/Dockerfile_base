@@ -8,8 +8,8 @@ RUN apt-get update && \
     # compiler for Python C modules
     g++ make libc6-dev
 
-RUN groupadd -g 1337 cornershop && \
-    useradd -m -d /opt/cornershop -u 1337 -g cornershop cornershop
+RUN groupadd -g 1000 cornershop && \
+    useradd -m -d /opt/cornershop -u 1000 -g cornershop cornershop
 
 USER cornershop
 
@@ -32,8 +32,8 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     procps vim less
 
-RUN groupadd -g 1337 cornershop && \
-    useradd -m -d /opt/cornershop -u 1337 -g cornershop cornershop
+RUN groupadd -g 1000 cornershop && \
+    useradd -m -d /opt/cornershop -u 1000 -g cornershop cornershop
 
 USER cornershop
 WORKDIR /opt/cornershop
