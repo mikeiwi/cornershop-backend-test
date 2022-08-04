@@ -54,4 +54,3 @@ def test_list_pagination(client, staff_user):
     context = response.context
     assert context["menu_list"].count() == 10
     assert response.content.count(b"Menu for:") == 10
-

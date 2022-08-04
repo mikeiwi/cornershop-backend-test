@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.views.generic import ListView
+from django.views.generic import CreateView, ListView
 
 from .models import Menu
 
@@ -18,3 +18,7 @@ class MenuListView(StaffRequiredMixin, ListView):
 
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
+
+
+class MenuListCreateView(StaffRequiredMixin, CreateView):
+    pass
