@@ -16,12 +16,26 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Menu',
+            name="Menu",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('date', models.DateField()),
-                ('creation_dt', models.DateTimeField(auto_now_add=True, null=True)),
-                ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("date", models.DateField()),
+                ("creation_dt", models.DateTimeField(auto_now_add=True, null=True)),
+                (
+                    "author",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

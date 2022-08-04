@@ -2,6 +2,8 @@
 import pytest
 from django.urls import reverse
 
+from model_mommy import mommy
+
 
 def test_unauthenticated_redirect(client):
     """Unauthenticated user should be redirected to login page."""
@@ -24,3 +26,19 @@ def test_admin_access(client, staff_user):
     response = client.get(reverse("menu"))
 
     assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_list_all_menus(client, staff_user):
+    """Created menus should be listed."""
+    mommy.make("Menu", author=staff_user, _quantity=3)
+
+    response = client.get(reverse("menu"))
+
+    assert response.status_code == 200
+
+    context = response.context
+
+    assert context["menu_list"].count() == 3
+
+    assert response.content.count(b"Menu for:") == 3

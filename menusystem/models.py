@@ -9,3 +9,6 @@ class Menu(models.Model):
     date = models.DateField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     creation_dt = models.DateTimeField(auto_now_add=True, null=True)
+
+    def __str__(self):
+        return f"Menu for {self.date} by {self.author.username}"

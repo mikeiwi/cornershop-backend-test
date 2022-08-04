@@ -1,5 +1,4 @@
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.utils.decorators import method_decorator
 from django.views.generic import ListView
 
 from .models import Menu
@@ -14,6 +13,7 @@ class MenuListView(StaffRequiredMixin, ListView):
     """Menus List"""
 
     queryset = Menu.objects.all()
+    context_object_name = "menu_list"
 
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
