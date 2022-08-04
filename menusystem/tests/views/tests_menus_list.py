@@ -38,15 +38,13 @@ def test_list_all_menus(client, staff_user):
     assert response.status_code == 200
 
     context = response.context
-
     assert context["menu_list"].count() == 3
-
     assert response.content.count(b"Menu for:") == 3
 
 
 @pytest.mark.django_db
 def test_list_pagination(client, staff_user):
-    """Menus should have a pagination strategy."""
+    """When there are more than 10 menus, a pagination strategy should be used."""
     mommy.make("Menu", author=staff_user, _quantity=15)
 
     response = client.get(reverse("menu"))
@@ -54,8 +52,6 @@ def test_list_pagination(client, staff_user):
     assert response.status_code == 200
 
     context = response.context
-
     assert context["menu_list"].count() == 10
-
     assert response.content.count(b"Menu for:") == 10
 
