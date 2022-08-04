@@ -21,4 +21,5 @@ class MenuListView(StaffRequiredMixin, ListView):
 
 
 class MenuListCreateView(StaffRequiredMixin, CreateView):
-    pass
+    model = Menu
+    fields = ["date",]
