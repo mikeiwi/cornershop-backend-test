@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView
 
 from .models import Menu
@@ -23,3 +24,8 @@ class MenuListView(StaffRequiredMixin, ListView):
 class MenuListCreateView(StaffRequiredMixin, CreateView):
     model = Menu
     fields = ["date",]
+    success_url = reverse_lazy("menu")
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
