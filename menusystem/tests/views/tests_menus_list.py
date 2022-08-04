@@ -16,3 +16,11 @@ def test_no_admin_redirect(client, employee_user):
     response = client.get(reverse("menu"))
 
     assert response.status_code == 403
+
+
+@pytest.mark.django_db
+def test_admin_access(client, staff_user):
+    """Staff user should access the page successfully."""
+    response = client.get(reverse("menu"))
+
+    assert response.status_code == 200
