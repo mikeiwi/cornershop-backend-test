@@ -23,7 +23,9 @@ class MenuListView(StaffRequiredMixin, ListView):
 
 class MenuListCreateView(StaffRequiredMixin, CreateView):
     model = Menu
-    fields = ["date",]
+    fields = [
+        "date",
+    ]
     success_url = reverse_lazy("menu")
 
     def form_valid(self, form):
