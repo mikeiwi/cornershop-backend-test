@@ -12,8 +12,9 @@ class StaffRequiredMixin(UserPassesTestMixin):
 class MenuListView(StaffRequiredMixin, ListView):
     """Menus List"""
 
-    queryset = Menu.objects.all()
+    queryset = Menu.objects.order_by("-date")
     context_object_name = "menu_list"
+    paginate_by = 10
 
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
