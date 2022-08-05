@@ -20,3 +20,12 @@ class Meal(models.Model):
 
     def __str__(self):
         return f"Meal: {self.name}"
+
+
+class MealOrder(models.Model):
+    menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
+    employee = models.ForeignKey(User, on_delete=models.CASCADE)
+    meal = models.ForeignKey(Meal, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Meal Order: menu: {self.menu.date}, employee: {self.employee.username}, meal: {self.meal.name}"

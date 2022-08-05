@@ -5,7 +5,7 @@ from django.utils import timezone
 
 import pytz
 
-from .models import Menu
+from .models import MealOrder, Menu
 
 
 class MenuForm(forms.ModelForm):
@@ -44,3 +44,9 @@ class MenuForm(forms.ModelForm):
             )
 
         return date
+
+
+class MealOrderForm(forms.ModelForm):
+    class Meta:
+        model = MealOrder
+        fields = ["meal"]

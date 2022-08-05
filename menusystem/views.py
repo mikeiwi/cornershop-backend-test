@@ -2,8 +2,8 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView
 
-from .forms import MenuForm
-from .models import Menu
+from .forms import MealOrderForm, MenuForm
+from .models import MealOrder, Menu
 from .utils import meals_create
 
 
@@ -51,3 +51,8 @@ class MenuUpdateView(StaffRequiredMixin, UpdateView):
         meals_create(meals=meals, menu=form.instance)
 
         return response
+
+
+class MealOrderCreateView(CreateView):
+    model = MealOrder
+    form_class = MealOrderForm
