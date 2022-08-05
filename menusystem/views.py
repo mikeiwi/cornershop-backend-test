@@ -2,6 +2,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView
 
+from .forms import MenuForm
 from .models import Menu
 
 
@@ -23,9 +24,7 @@ class MenuListView(StaffRequiredMixin, ListView):
 
 class MenuListCreateView(StaffRequiredMixin, CreateView):
     model = Menu
-    fields = [
-        "date",
-    ]
+    form_class = MenuForm
     success_url = reverse_lazy("menu")
 
     def form_valid(self, form):
