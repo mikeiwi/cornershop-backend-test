@@ -9,6 +9,12 @@ from .models import Menu
 
 
 class MenuForm(forms.ModelForm):
+    meals = forms.CharField(
+        widget=forms.Textarea(attrs={"name": "meals", "rows": 10, "cols": 80}),
+        required=True,
+        help_text="Split the meals in different lines.",
+    )
+
     class Meta:
         model = Menu
         fields = ["date"]

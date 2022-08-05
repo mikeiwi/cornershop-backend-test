@@ -86,3 +86,21 @@ def test_menu_creation_before_today(client, staff_user, mocker):
     response = client.post(reverse("menu_create"), data={"date": date})
 
     assert Menu.objects.count() == 0
+
+
+@pytest.mark.django_db
+def test_meal_options(client, staff_user):
+    """Menu meals should be stored successfully."""
+    date = (datetime.now() + timedelta(days=1)).date()
+    response = client.post(
+        reverse("menu_create"),
+        data={
+            "date": date,
+            "meals": "one\r\ntwo\r\nthree",
+        },
+    )
+
+    assert Menu.objects.count() == 1
+
+    menu = Menu.objects.get()
+    assert menu.meals.count() == 3

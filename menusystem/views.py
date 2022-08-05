@@ -4,6 +4,7 @@ from django.views.generic import CreateView, ListView
 
 from .forms import MenuForm
 from .models import Menu
+from .utils import meals_create
 
 
 class StaffRequiredMixin(UserPassesTestMixin):
@@ -29,4 +30,9 @@ class MenuListCreateView(StaffRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        return super().form_valid(form)
+        response = super().form_valid(form)
+
+        names = form.cleaned_data["meals"].split("\r\n")
+        meals_create(names=names, menu=form.instance)
+
+        return response
