@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, UpdateView
 
 from .forms import MenuForm
 from .models import Menu
@@ -23,7 +23,7 @@ class MenuListView(StaffRequiredMixin, ListView):
         return super().dispatch(*args, **kwargs)
 
 
-class MenuListCreateView(StaffRequiredMixin, CreateView):
+class MenuCreateView(StaffRequiredMixin, CreateView):
     model = Menu
     form_class = MenuForm
     success_url = reverse_lazy("menu")
@@ -36,3 +36,9 @@ class MenuListCreateView(StaffRequiredMixin, CreateView):
         meals_create(meals=meals, menu=form.instance)
 
         return response
+
+
+class MenuUpdateView(StaffRequiredMixin, UpdateView):
+    model = Menu
+    form_class = MenuForm
+    success_url = reverse_lazy("menu")
