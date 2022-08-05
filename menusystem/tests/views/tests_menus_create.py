@@ -29,7 +29,7 @@ def test_admin_access(client, staff_user):
 def test_basic_menu_creation(client, staff_user):
     """Menu with a provided future date should be created successfully."""
     date = (datetime.now() + timedelta(days=1)).date()
-    response = client.post(reverse("menu_create"), data={"date": date})
+    response = client.post(reverse("menu_create"), data={"date": date, "meals": "one"})
 
     assert Menu.objects.count() == 1
 
