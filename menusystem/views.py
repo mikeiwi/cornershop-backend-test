@@ -32,7 +32,7 @@ class MenuListCreateView(StaffRequiredMixin, CreateView):
         form.instance.author = self.request.user
         response = super().form_valid(form)
 
-        names = form.cleaned_data["meals"].split("\r\n")
-        meals_create(names=names, menu=form.instance)
+        meals = form.cleaned_data["meals"].split("\r\n")
+        meals_create(meals=meals, menu=form.instance)
 
         return response
