@@ -42,3 +42,12 @@ class MenuUpdateView(StaffRequiredMixin, UpdateView):
     model = Menu
     form_class = MenuForm
     success_url = reverse_lazy("menu")
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        form.instance.meals.clear()
+        meals = form.cleaned_data["meals"].split("\r\n")
+        meals_create(meals=meals, menu=form.instance)
+
+        return response
