@@ -56,3 +56,10 @@ class MenuUpdateView(StaffRequiredMixin, UpdateView):
 class MealOrderCreateView(CreateView):
     model = MealOrder
     form_class = MealOrderForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        menu = Menu.objects.get(id=self.kwargs["pk"])
+        context["form"].fields["meal"].queryset = menu.meals.all()
+        return context

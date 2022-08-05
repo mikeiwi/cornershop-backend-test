@@ -9,27 +9,53 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('menusystem', '0003_meal'),
+        ("menusystem", "0003_meal"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='meal',
-            name='menus',
-            field=models.ManyToManyField(related_name='meals', to='menusystem.Menu'),
+            model_name="meal",
+            name="menus",
+            field=models.ManyToManyField(related_name="meals", to="menusystem.Menu"),
         ),
         migrations.AlterField(
-            model_name='menu',
-            name='date',
-            field=models.DateField(help_text='YYYY-mm-dd format', unique=True),
+            model_name="menu",
+            name="date",
+            field=models.DateField(help_text="YYYY-mm-dd format", unique=True),
         ),
         migrations.CreateModel(
-            name='MealOrder',
+            name="MealOrder",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('emplyee', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-                ('meal', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='menusystem.Meal')),
-                ('menu', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='menusystem.Menu')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "emplyee",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "meal",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="menusystem.Meal",
+                    ),
+                ),
+                (
+                    "menu",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="menusystem.Menu",
+                    ),
+                ),
             ],
         ),
     ]
