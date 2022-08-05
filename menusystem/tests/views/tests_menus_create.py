@@ -69,3 +69,20 @@ def test_menu_creation_after_sending_time(client, staff_user, mocker):
     response = client.post(reverse("menu_create"), data={"date": date})
 
     assert Menu.objects.count() == 0
+
+
+@pytest.mark.django_db
+def test_menu_creation_before_today(client, staff_user, mocker):
+    """Menus can not be created for passed days, no matter the hour"""
+    SENDING_HOUR = settings.REMINDER_SENDING_HOUR
+    current_hour = SENDING_HOUR - 1
+
+    mock = mocker.patch("django.utils.timezone.now")
+    mock.return_value = datetime(
+        2020, 5, 3, current_hour, 0, tzinfo=pytz.timezone(settings.OFFICE_TIME_ZONE)
+    )
+
+    date = (mock.return_value - timedelta(days=1)).date()
+    response = client.post(reverse("menu_create"), data={"date": date})
+
+    assert Menu.objects.count() == 0
