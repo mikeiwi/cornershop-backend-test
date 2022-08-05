@@ -15,6 +15,13 @@ class MenuForm(forms.ModelForm):
         help_text="Split the meals in different lines.",
     )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if self.instance:
+            meals = self.instance.meals.all().values_list("name", flat=True)
+            self.fields["meals"].initial = "\r\n".join(meals)
+
     class Meta:
         model = Menu
         fields = ["date"]
