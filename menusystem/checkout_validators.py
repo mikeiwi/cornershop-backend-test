@@ -3,6 +3,7 @@ from typing import Any, Optional
 
 from django.conf import settings
 from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
 from django.utils import timezone
 
 import pytz
@@ -30,11 +31,20 @@ class AbstractHandler(Handler):
     """
 
     _next_handler: Handler = None
+    _error_handler: Handler = None
     error_message: str = None
 
     def set_next(self, handler: Handler) -> Handler:
         self._next_handler = handler
         return handler
+
+    def set_error(self, handler: Handler) -> Handler:
+        """In case you need to set the error handler (to send request to another handler instead of
+        returning an error), always set the error before the next handler.
+
+        Remember to override the handle method to make use of the error handle."""
+        self._error_handler = handler
+        return self
 
     def handle(self, request: Any) -> str:
         if not self.validate(request):
@@ -88,9 +98,19 @@ class CanAuthenticateValidator(AbstractHandler):
         """Let's override this method in order to set the authenticated user into the request."""
         user = self.validate(request)
         if not user:
-            pass
+            if self._error_handler:
+                return self._error_handler.handle(request)
+
         elif self._next_handler:
             request["user"] = user
             return self._next_handler.handle(request)
 
         return None
+
+
+class IsNewUserValidator(AbstractHandler):
+    error_message = "User not found"
+
+    def validate(self, request: Any):
+        """Validates if a user with the username does NOT exist."""
+        return not User.objects.filter(username=request["username"]).exists()

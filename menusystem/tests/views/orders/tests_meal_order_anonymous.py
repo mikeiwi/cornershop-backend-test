@@ -81,3 +81,21 @@ def test_anonymous_exiting_user_success(client, menu):
     assert order.menu == menu
     assert order.employee == user
     assert order.meal == meal
+
+
+@pytest.mark.django_db
+def test_anonymous_wrong_credentials(client, menu):
+    """If provided credentials are incorrect, order should not checkout"""
+    user = User.objects.create(username="princess_carolyne")
+    user.set_password("meowpassword")
+    user.save()
+
+    meal = menu.meals.first()
+    response = client.post(
+        reverse("meal_order_create", kwargs={"pk": menu.id}),
+        data={"meal": meal.id, "username": user.username, "password": "wrongpassword"},
+    )
+
+    assert MealOrder.objects.count() == 0
+
+    assert b"User not found" in response.content
