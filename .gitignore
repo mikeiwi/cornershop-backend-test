@@ -14,3 +14,4 @@ htmlcov/
 *.ipynb
 .DS_Store
 _*/
+*~
