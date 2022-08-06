@@ -9,7 +9,16 @@ from menusystem.models import Meal, Menu
 
 @pytest.fixture
 def menu():
-    return mommy.make(Menu)
+    """Menu with meals."""
+    menu = mommy.make(Menu)
+
+    meal = Meal.objects.create(name="Salad")
+    meal.menus.add(menu)
+
+    meal = Meal.objects.create(name="Hamburguer")
+    meal.menus.add(menu)
+    
+    return menu
 
 
 @pytest.mark.django_db
@@ -23,9 +32,6 @@ def test_anonymous_access(client, menu):
 @pytest.mark.django_db
 def test_meal_options(client, menu):
     """Meal options for the menu should be displayed as options."""
-    meal = Meal.objects.create(name="Salad")
-    meal.menus.add(menu)
-
     mommy.make(Meal, name="Meal not in this menu")
 
     response = client.get(reverse("meal_order_create", kwargs={"pk": menu.id}))
