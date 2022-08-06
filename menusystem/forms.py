@@ -5,7 +5,7 @@ from django.utils import timezone
 
 import pytz
 
-from .checkout_validators import CheckoutTimeValidator, ExistingOrderValidator
+from .checkout_validators import CheckoutTimeValidator, IsNewOrderValidator
 from .models import MealOrder, Menu
 
 
@@ -63,10 +63,10 @@ class MealOrderForm(forms.ModelForm):
         request["user"] = self.user
 
         checkout_time_validator = CheckoutTimeValidator()
-        existing_order_validator = ExistingOrderValidator()
+        is_new_order_validator = IsNewOrderValidator()
 
         first_validator = checkout_time_validator
-        checkout_time_validator.set_next(existing_order_validator)
+        checkout_time_validator.set_next(is_new_order_validator)
 
         error = first_validator.handle(request)
         if error:

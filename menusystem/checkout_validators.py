@@ -67,7 +67,7 @@ class CheckoutTimeValidator(AbstractHandler):
         return now_localized < menu_checkout_datetime
 
 
-class ExistingOrderValidator(AbstractHandler):
+class IsNewOrderValidator(AbstractHandler):
     error_message = "Order for this user already exists"
 
     def validate(self, request: Any):
