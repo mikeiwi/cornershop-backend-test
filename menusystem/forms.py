@@ -9,7 +9,8 @@ from .checkout_validators import (
     CanAuthenticateValidator,
     CheckoutTimeValidator,
     IsNewOrderValidator,
-    IsNewUserValidator
+    IsNewUserValidator,
+    UserSignUpValidator,
 )
 from .models import MealOrder, Menu
 
@@ -78,8 +79,15 @@ class MealOrderForm(forms.ModelForm):
             # Validators for unauthenticated users flow
             can_authenticate_validator = CanAuthenticateValidator()
             is_new_user_validator = IsNewUserValidator()
+            user_signup_validator = UserSignUpValidator()
 
-            first_validator.set_next(can_authenticate_validator).set_error(is_new_user_validator)
+            # authentication flow
+            first_validator.set_next(can_authenticate_validator)
+
+            #  signup flow
+            can_authenticate_validator.set_error(is_new_user_validator).set_next(
+                user_signup_validator
+            )
 
         error = first_validator.handle(request)
         if error:

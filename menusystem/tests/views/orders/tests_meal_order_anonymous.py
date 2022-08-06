@@ -99,3 +99,22 @@ def test_anonymous_wrong_credentials(client, menu):
     assert MealOrder.objects.count() == 0
 
     assert b"User not found" in response.content
+
+
+@pytest.mark.django_db
+def test_signup_fow_new_user(client, menu):
+    """If username is not found, a guest checkout should be performed"""
+    meal = menu.meals.first()
+    response = client.post(
+        reverse("meal_order_create", kwargs={"pk": menu.id}),
+        data={"meal": meal.id, "username": "new_user", "password": "password"},
+    )
+
+    assert MealOrder.objects.count() == 1
+
+    assert User.objects.filter(username="new_user").exists()
+
+    order = MealOrder.objects.get()
+    assert order.menu == menu
+    assert order.employee.username == "new_user"
+    assert order.meal == meal

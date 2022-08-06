@@ -40,11 +40,9 @@ class AbstractHandler(Handler):
 
     def set_error(self, handler: Handler) -> Handler:
         """In case you need to set the error handler (to send request to another handler instead of
-        returning an error), always set the error before the next handler.
-
-        Remember to override the handle method to make use of the error handle."""
+        returning an error), remember to override the handle method to make use of the error handle."""
         self._error_handler = handler
-        return self
+        return handler
 
     def handle(self, request: Any) -> str:
         if not self.validate(request):
@@ -114,3 +112,14 @@ class IsNewUserValidator(AbstractHandler):
     def validate(self, request: Any):
         """Validates if a user with the username does NOT exist."""
         return not User.objects.filter(username=request["username"]).exists()
+
+
+class UserSignUpValidator(AbstractHandler):
+    def validate(self, request: Any):
+        """Creates a user with provided credentials."""
+        user = User.objects.create(username=request["username"])
+        user.set_password(request["password"])
+        user.save()
+
+        request["user"] = user
+        return user
