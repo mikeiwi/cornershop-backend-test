@@ -1,9 +1,11 @@
-import pytest
-import pytz
 from datetime import datetime
+
+import pytest
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.urls import reverse
 
+import pytz
 from model_mommy import mommy
 
 from menusystem.models import Meal, MealOrder
@@ -58,3 +60,24 @@ def test_anonymous_checkout_time_passed(client, menu, mocker):
 
     assert MealOrder.objects.count() == 0
     assert b"Checkout time has passed" in response.content
+
+
+@pytest.mark.django_db
+def test_anonymous_exiting_user_success(client, menu):
+    """If provided credentials are correct, order should checkout successfully"""
+    user = User.objects.create(username="princess_carolyne")
+    user.set_password("meowpassword")
+    user.save()
+
+    meal = menu.meals.first()
+    response = client.post(
+        reverse("meal_order_create", kwargs={"pk": menu.id}),
+        data={"meal": meal.id, "username": user.username, "password": "meowpassword"},
+    )
+
+    assert MealOrder.objects.count() == 1
+
+    order = MealOrder.objects.get()
+    assert order.menu == menu
+    assert order.employee == user
+    assert order.meal == meal

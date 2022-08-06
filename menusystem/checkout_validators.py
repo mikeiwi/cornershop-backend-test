@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Any, Optional
 
 from django.conf import settings
+from django.contrib.auth import authenticate
 from django.utils import timezone
 
 import pytz
@@ -29,6 +30,7 @@ class AbstractHandler(Handler):
     """
 
     _next_handler: Handler = None
+    error_message: str = None
 
     def set_next(self, handler: Handler) -> Handler:
         self._next_handler = handler
@@ -75,3 +77,20 @@ class IsNewOrderValidator(AbstractHandler):
         return not MealOrder.objects.filter(
             menu=request["menu"], employee=request["user"]
         ).exists()
+
+
+class CanAuthenticateValidator(AbstractHandler):
+    def validate(self, request: Any):
+        """Validates if user can be authenticated with provided credentials"""
+        return authenticate(username=request["username"], password=request["password"])
+
+    def handle(self, request: Any) -> str:
+        """Let's override this method in order to set the authenticated user into the request."""
+        user = self.validate(request)
+        if not user:
+            pass
+        elif self._next_handler:
+            request["user"] = user
+            return self._next_handler.handle(request)
+
+        return None

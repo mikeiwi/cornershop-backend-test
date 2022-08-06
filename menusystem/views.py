@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth import authenticate
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
@@ -81,7 +82,14 @@ class MealOrderCreateView(CreateView):
         return reverse_lazy("")
 
     def form_valid(self, form):
-        form.instance.employee = self.request.user
+        if not self.request.user.is_authenticated:
+            form.instance.employee = authenticate(
+                username=form.cleaned_data["username"],
+                password=form.cleaned_data["password"],
+            )
+        else:
+            form.instance.employee = self.request.user
+
         form.instance.menu = form.menu
         form.instance.save()
 
