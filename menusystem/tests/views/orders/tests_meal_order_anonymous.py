@@ -1,9 +1,12 @@
 import pytest
+import pytz
+from datetime import datetime
+from django.conf import settings
 from django.urls import reverse
 
 from model_mommy import mommy
 
-from menusystem.models import Meal
+from menusystem.models import Meal, MealOrder
 
 
 @pytest.mark.django_db
@@ -32,3 +35,26 @@ def test_anonymous_access_login_form(client, menu):
 
     assert b"username" in response.content
     assert b"password" in response.content
+
+
+@pytest.mark.django_db
+def test_anonymous_checkout_time_passed(client, menu, mocker):
+    """An order for a given date may only be registered before chekout time (11 AM CLT).
+    Request should be denied."""
+    CHECKOUT_HOUR = settings.CHECKOUT_HOUR
+    current_hour = CHECKOUT_HOUR + 1
+
+    mock = mocker.patch("django.utils.timezone.now")
+    mock.return_value = datetime(
+        2020, 5, 3, current_hour, 0, tzinfo=pytz.timezone(settings.OFFICE_TIME_ZONE)
+    )
+
+    menu.date = mock.return_value.date()
+    menu.save()
+    meal = menu.meals.first()
+    response = client.post(
+        reverse("meal_order_create", kwargs={"pk": menu.id}), data={"meal": meal.id}
+    )
+
+    assert MealOrder.objects.count() == 0
+    assert b"Checkout time has passed" in response.content
