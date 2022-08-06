@@ -27,5 +27,11 @@ class MealOrder(models.Model):
     employee = models.ForeignKey(User, on_delete=models.CASCADE)
     meal = models.ForeignKey(Meal, on_delete=models.CASCADE)
 
+    class Meta:
+        unique_together = (
+            "menu",
+            "employee",
+        )
+
     def __str__(self):
         return f"Meal Order: menu: {self.menu.date}, employee: {self.employee.username}, meal: {self.meal.name}"

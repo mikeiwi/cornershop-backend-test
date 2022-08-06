@@ -6,6 +6,8 @@ from django.utils import timezone
 
 import pytz
 
+from menusystem.models import MealOrder
+
 
 class Handler(ABC):
     @abstractmethod
@@ -63,5 +65,19 @@ class CheckoutTimeValidator(AbstractHandler):
     def handle(self, request: Any) -> str:
         if not self.validate(request):
             return "Checkout time has passed"
+        else:
+            return super().handle(request)
+
+
+class ExistingOrderValidator(AbstractHandler):
+    def validate(self, request: Any):
+        """Validates if an order for a user does not exist."""
+        return not MealOrder.objects.filter(
+            menu=request["menu"], employee=request["user"]
+        ).exists()
+
+    def handle(self, request: Any) -> str:
+        if not self.validate(request):
+            return "Order for this user already exists"
         else:
             return super().handle(request)

@@ -101,3 +101,19 @@ def test_employee_order_success(client, menu, employee_user):
     assert order.menu == menu
     assert order.employee == employee_user
     assert order.meal == meal
+
+
+@pytest.mark.django_db
+def test_employee_order_already_exists(client, menu, employee_user):
+    """Employee should not be able to create more than one order for a menu."""
+    MealOrder.objects.create(employee=employee_user, menu=menu, meal=menu.meals.last())
+
+    meal = menu.meals.first()
+    response = client.post(
+        reverse("meal_order_create", kwargs={"pk": menu.id}),
+        data={"meal": meal.id},
+        follow=True,
+    )
+
+    assert MealOrder.objects.count() == 1
+    assert b"Order for this user already exists" in response.content
