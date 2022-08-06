@@ -63,7 +63,7 @@ def test_anonymous_checkout_time_passed(client, menu, mocker):
 
 
 @pytest.mark.django_db
-def test_anonymous_exiting_user_success(client, menu):
+def test_anonymous_existing_user_success(client, menu):
     """If provided credentials are correct, order should checkout successfully"""
     user = User.objects.create(username="princess_carolyne")
     user.set_password("meowpassword")
@@ -81,6 +81,26 @@ def test_anonymous_exiting_user_success(client, menu):
     assert order.menu == menu
     assert order.employee == user
     assert order.meal == meal
+
+
+@pytest.mark.django_db
+def test_anonymous_existing_user_existing_order(client, menu):
+    """If provided credentials are correct, but order for this meal already exists, checkout should be denied."""
+    user = User.objects.create(username="princess_carolyne")
+    user.set_password("meowpassword")
+    user.save()
+
+    MealOrder.objects.create(employee=user, menu=menu, meal=menu.meals.last())
+
+    meal = menu.meals.first()
+    response = client.post(
+        reverse("meal_order_create", kwargs={"pk": menu.id}),
+        data={"meal": meal.id, "username": user.username, "password": "meowpassword"},
+    )
+
+    assert MealOrder.objects.count() == 1
+    assert b"Order for this user already exists" in response.content
+
 
 
 @pytest.mark.django_db
