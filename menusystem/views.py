@@ -68,3 +68,9 @@ class MealOrderCreateView(CreateView):
             return MealOrderForm
 
         return MealOrderFormUnauthenticated
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        kwargs["menu"] = Menu.objects.get(id=self.kwargs["pk"])
+        return kwargs

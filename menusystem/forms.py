@@ -5,6 +5,7 @@ from django.utils import timezone
 
 import pytz
 
+from .checkout_validators import CheckoutTimeValidator
 from .models import MealOrder, Menu
 
 
@@ -50,6 +51,25 @@ class MealOrderForm(forms.ModelForm):
     class Meta:
         model = MealOrder
         fields = ["meal"]
+
+    def __init__(self, user, menu, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+        self.menu = menu
+
+    def clean(self):
+        request = cleaned_data = super().clean()
+        request["menu"] = self.menu
+
+        checkout_time_validator = CheckoutTimeValidator()
+
+        validators = checkout_time_validator
+        error = validators.handle(request)
+
+        if error:
+            raise ValidationError(error)
+
+        return cleaned_data
 
 
 class MealOrderFormUnauthenticated(MealOrderForm):

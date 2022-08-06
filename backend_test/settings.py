@@ -243,3 +243,4 @@ LOGOUT_REDIRECT_URL = "/"
 # Menu reminder for the day will be sent at this hour, CLT
 OFFICE_TIME_ZONE = os.getenv("OFFICE_TIME_ZONE", default="Chile/Continental")
 REMINDER_SENDING_HOUR = os.getenv("REMINDER_SENDING_HOUR", default=9)
+CHECKOUT_HOUR = os.getenv("CHECKOUT_HOUR", default=11)
