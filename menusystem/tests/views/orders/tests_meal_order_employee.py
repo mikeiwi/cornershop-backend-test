@@ -1,5 +1,5 @@
-"""Tests cases for orders checkout"""
-from datetime import datetime, timedelta
+"""Tests cases for orders checkout by authenticated users"""
+from datetime import datetime
 
 import pytest
 from django.conf import settings
@@ -8,49 +8,7 @@ from django.urls import reverse
 import pytz
 from model_mommy import mommy
 
-from menusystem.models import Meal, MealOrder, Menu
-
-
-@pytest.fixture
-def menu():
-    """Menu with meals."""
-    menu = mommy.make(Menu, date=datetime.now() + timedelta(days=2))
-
-    meal = Meal.objects.create(name="Salad")
-    meal.menus.add(menu)
-
-    meal = Meal.objects.create(name="Hamburguer")
-    meal.menus.add(menu)
-
-    return menu
-
-
-@pytest.mark.django_db
-def test_anonymous_access(client, menu):
-    """Anonymous user should access the page successfully."""
-    response = client.get(reverse("meal_order_create", kwargs={"pk": menu.id}))
-
-    assert response.status_code == 200
-
-
-@pytest.mark.django_db
-def test_meal_options(client, menu):
-    """Meal options for the menu should be displayed as options."""
-    mommy.make(Meal, name="Meal not in this menu")
-
-    response = client.get(reverse("meal_order_create", kwargs={"pk": menu.id}))
-
-    assert b"Salad" in response.content
-    assert b"Meal not in this menu" not in response.content
-
-
-@pytest.mark.django_db
-def test_anonymous_access_login_form(client, menu):
-    """Login fields should be added to the form for unauthenticated users."""
-    response = client.get(reverse("meal_order_create", kwargs={"pk": menu.id}))
-
-    assert b"username" in response.content
-    assert b"password" in response.content
+from menusystem.models import Meal, MealOrder
 
 
 @pytest.mark.django_db

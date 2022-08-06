@@ -1,5 +1,11 @@
+from datetime import datetime, timedelta
+
 import pytest
 from django.contrib.auth.models import User
+
+from model_mommy import mommy
+
+from menusystem.models import Meal, Menu
 
 
 @pytest.fixture
@@ -24,3 +30,17 @@ def staff_user(client):
     client.login(username="mrpeanutbutter", password="password")
 
     return user
+
+
+@pytest.fixture
+def menu():
+    """Menu with meals."""
+    menu = mommy.make(Menu, date=datetime.now() + timedelta(days=2))
+
+    meal = Meal.objects.create(name="Salad")
+    meal.menus.add(menu)
+
+    meal = Meal.objects.create(name="Hamburguer")
+    meal.menus.add(menu)
+
+    return menu
