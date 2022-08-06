@@ -36,8 +36,17 @@ def test_meal_options(client, menu):
 
 @pytest.mark.django_db
 def test_anonymous_access_login_form(client, menu):
-    """Login fields should be added to the form for unauthenticated users.."""
+    """Login fields should be added to the form for unauthenticated users."""
     response = client.get(reverse("meal_order_create", kwargs={"pk": menu.id}))
 
     assert b"username" in response.content
     assert b"password" in response.content
+
+
+@pytest.mark.django_db
+def test_employee_no_login_needed(client, menu, employee_user):
+    """For an authenticated user, login fields should not be rendered."""
+    response = client.get(reverse("meal_order_create", kwargs={"pk": menu.id}))
+
+    assert b"username" not in response.content
+    assert b"password" not in response.content

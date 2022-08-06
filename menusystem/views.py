@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView
 
-from .forms import MealOrderForm, MenuForm
+from .forms import MealOrderForm, MealOrderFormUnauthenticated, MenuForm
 from .models import MealOrder, Menu
 from .utils import meals_create
 
@@ -55,7 +55,6 @@ class MenuUpdateView(StaffRequiredMixin, UpdateView):
 
 class MealOrderCreateView(CreateView):
     model = MealOrder
-    form_class = MealOrderForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -63,3 +62,9 @@ class MealOrderCreateView(CreateView):
         menu = Menu.objects.get(id=self.kwargs["pk"])
         context["form"].fields["meal"].queryset = menu.meals.all()
         return context
+
+    def get_form_class(self):
+        if self.request.user.is_authenticated:
+            return MealOrderForm
+
+        return MealOrderFormUnauthenticated

@@ -47,9 +47,11 @@ class MenuForm(forms.ModelForm):
 
 
 class MealOrderForm(forms.ModelForm):
-    username = forms.CharField(required=True, max_length=100)
-    password = forms.CharField(widget=forms.PasswordInput())
-
     class Meta:
         model = MealOrder
         fields = ["meal"]
+
+
+class MealOrderFormUnauthenticated(MealOrderForm):
+    username = forms.CharField(required=True, max_length=100)
+    password = forms.CharField(widget=forms.PasswordInput())
