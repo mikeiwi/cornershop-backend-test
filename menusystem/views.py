@@ -1,4 +1,6 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView
 
@@ -74,3 +76,16 @@ class MealOrderCreateView(CreateView):
         kwargs["user"] = self.request.user
         kwargs["menu"] = Menu.objects.get(id=self.kwargs["pk"])
         return kwargs
+
+    def get_success_url(self):
+        return reverse_lazy("")
+
+    def form_valid(self, form):
+        form.instance.employee = self.request.user
+        form.instance.menu = form.menu
+        form.instance.save()
+
+        messages.success(
+            self.request, f"Your meal: <b>{form.instance.meal.name}</b> was registered!"
+        )
+        return HttpResponseRedirect(self.request.path_info)

@@ -29,7 +29,7 @@ def test_admin_access(client, staff_user):
 def test_basic_menu_creation(client, staff_user):
     """Menu with a provided future date should be created successfully."""
     date = (datetime.now() + timedelta(days=1)).date()
-    response = client.post(reverse("menu_create"), data={"date": date, "meals": "one"})
+    client.post(reverse("menu_create"), data={"date": date, "meals": "one"})
 
     assert Menu.objects.count() == 1
 
@@ -44,7 +44,7 @@ def test_only_one_per_date(client, staff_user):
     date = (datetime.now() + timedelta(days=1)).date()
     Menu.objects.create(date=date, author=staff_user)
 
-    response = client.post(reverse("menu_create"), data={"date": date})
+    client.post(reverse("menu_create"), data={"date": date})
 
     assert Menu.objects.count() == 1
 
@@ -66,7 +66,7 @@ def test_menu_creation_after_sending_time(client, staff_user, mocker):
     )
 
     date = mock.return_value.date()
-    response = client.post(reverse("menu_create"), data={"date": date})
+    client.post(reverse("menu_create"), data={"date": date})
 
     assert Menu.objects.count() == 0
 
@@ -83,7 +83,7 @@ def test_menu_creation_before_today(client, staff_user, mocker):
     )
 
     date = (mock.return_value - timedelta(days=1)).date()
-    response = client.post(reverse("menu_create"), data={"date": date})
+    client.post(reverse("menu_create"), data={"date": date})
 
     assert Menu.objects.count() == 0
 
@@ -92,7 +92,7 @@ def test_menu_creation_before_today(client, staff_user, mocker):
 def test_meal_options(client, staff_user):
     """Menu meals should be stored successfully."""
     date = (datetime.now() + timedelta(days=1)).date()
-    response = client.post(
+    client.post(
         reverse("menu_create"),
         data={
             "date": date,

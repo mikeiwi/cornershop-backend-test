@@ -1,5 +1,5 @@
 """Tests cases for orders checkout"""
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import pytest
 from django.conf import settings
@@ -14,7 +14,7 @@ from menusystem.models import Meal, MealOrder, Menu
 @pytest.fixture
 def menu():
     """Menu with meals."""
-    menu = mommy.make(Menu)
+    menu = mommy.make(Menu, date=datetime.now() + timedelta(days=2))
 
     meal = Meal.objects.create(name="Salad")
     meal.menus.add(menu)
@@ -63,7 +63,7 @@ def test_employee_no_login_needed(client, menu, employee_user):
 
 
 @pytest.mark.django_db
-def test_order_checkout_time_passed(client, menu, employee_user, mocker):
+def test_employee_checkout_time_passed(client, menu, employee_user, mocker):
     """An order for a given date may only be registered before chekout time (11 AM CLT).
     Request should be denied."""
     CHECKOUT_HOUR = settings.CHECKOUT_HOUR
@@ -83,3 +83,21 @@ def test_order_checkout_time_passed(client, menu, employee_user, mocker):
 
     assert MealOrder.objects.count() == 0
     assert b"Checkout time has passed" in response.content
+
+
+@pytest.mark.django_db
+def test_employee_order_success(client, menu, employee_user):
+    """Order should be successfully created."""
+    meal = menu.meals.first()
+    client.post(
+        reverse("meal_order_create", kwargs={"pk": menu.id}),
+        data={"meal": meal.id},
+        follow=True,
+    )
+
+    assert MealOrder.objects.count() == 1
+
+    order = MealOrder.objects.get()
+    assert order.menu == menu
+    assert order.employee == employee_user
+    assert order.meal == meal

@@ -42,7 +42,7 @@ def test_basic_menu_update(client, staff_user):
     menu = Menu.objects.create(date=datetime.now().date(), author=staff_user)
 
     date = (datetime.now() + timedelta(days=1)).date()
-    response = client.post(
+    client.post(
         reverse("menu_update", kwargs={"pk": menu.id}),
         data={"date": date, "meals": "one"},
     )
@@ -68,7 +68,7 @@ def test_menu_update_after_sending_time(client, staff_user, mocker):
     date = mock.return_value.date()
 
     menu = Menu.objects.create(date=date, author=staff_user)
-    response = client.post(
+    client.post(
         reverse("menu_update", kwargs={"pk": menu.id}),
         data={"date": date, "meals": "one"},
     )
@@ -87,7 +87,7 @@ def test_meal_options(client, staff_user):
 
     date = (datetime.now() + timedelta(days=1)).date()
 
-    response = client.post(
+    client.post(
         reverse("menu_update", kwargs={"pk": menu.id}),
         data={
             "date": date,
