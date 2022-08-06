@@ -90,17 +90,17 @@ class IsNewOrderValidator(AbstractHandler):
 class CanAuthenticateValidator(AbstractHandler):
     def validate(self, request: Any):
         """Validates if user can be authenticated with provided credentials"""
-        return authenticate(username=request["username"], password=request["password"])
+        user = authenticate(username=request["username"], password=request["password"])
+        request["user"] = user
+        return user
 
     def handle(self, request: Any) -> str:
         """Let's override this method in order to set the authenticated user into the request."""
-        user = self.validate(request)
-        if not user:
+        if not self.validate(request):
             if self._error_handler:
                 return self._error_handler.handle(request)
 
         elif self._next_handler:
-            request["user"] = user
             return self._next_handler.handle(request)
 
         return None
