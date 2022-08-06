@@ -35,13 +35,17 @@ class AbstractHandler(Handler):
         return handler
 
     def handle(self, request: Any) -> str:
-        if self._next_handler:
+        if not self.validate(request):
+            return self.error_message
+        elif self._next_handler:
             return self._next_handler.handle(request)
 
         return None
 
 
 class CheckoutTimeValidator(AbstractHandler):
+    error_message = "Checkout time has passed"
+
     def validate(self, request: Any):
         """Validates if the checkout hour has already passed for the menu."""
         CHECKOUT_HOUR = settings.CHECKOUT_HOUR
@@ -62,22 +66,12 @@ class CheckoutTimeValidator(AbstractHandler):
 
         return now_localized < menu_checkout_datetime
 
-    def handle(self, request: Any) -> str:
-        if not self.validate(request):
-            return "Checkout time has passed"
-        else:
-            return super().handle(request)
-
 
 class ExistingOrderValidator(AbstractHandler):
+    error_message = "Order for this user already exists"
+
     def validate(self, request: Any):
         """Validates if an order for a user does not exist."""
         return not MealOrder.objects.filter(
             menu=request["menu"], employee=request["user"]
         ).exists()
-
-    def handle(self, request: Any) -> str:
-        if not self.validate(request):
-            return "Order for this user already exists"
-        else:
-            return super().handle(request)
