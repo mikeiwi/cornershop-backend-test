@@ -61,6 +61,23 @@ def test_employee_order_success(client, menu, employee_user):
 
 
 @pytest.mark.django_db
+def test_employee_order_customization(client, menu, employee_user):
+    """Optional customization shuld be stored."""
+    meal = menu.meals.first()
+    client.post(
+        reverse("meal_order_create", kwargs={"pk": menu.id}),
+        data={
+            "meal": meal.id,
+            "customization": "I'll pass on the posion for today, thanks.",
+        },
+        follow=True,
+    )
+
+    order = MealOrder.objects.get()
+    assert order.customization == "I'll pass on the posion for today, thanks."
+
+
+@pytest.mark.django_db
 def test_employee_order_already_exists(client, menu, employee_user):
     """Employee should not be able to create more than one order for a menu."""
     MealOrder.objects.create(employee=employee_user, menu=menu, meal=menu.meals.last())

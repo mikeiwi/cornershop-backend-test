@@ -26,6 +26,7 @@ class MealOrder(models.Model):
     menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
     employee = models.ForeignKey(User, on_delete=models.CASCADE)
     meal = models.ForeignKey(Meal, on_delete=models.CASCADE)
+    customization = models.CharField(max_length=200, blank=True)
 
     class Meta:
         unique_together = (

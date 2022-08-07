@@ -56,7 +56,7 @@ class MenuForm(forms.ModelForm):
 class MealOrderForm(forms.ModelForm):
     class Meta:
         model = MealOrder
-        fields = ["meal"]
+        fields = ["meal", "customization"]
 
     def __init__(self, user, menu, *args, **kwargs):
         super().__init__(*args, **kwargs)
