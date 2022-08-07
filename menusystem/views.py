@@ -21,9 +21,6 @@ class MenuListView(StaffRequiredMixin, ListView):
     context_object_name = "menu_list"
     paginate_by = 10
 
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
-
 
 class MenuCreateView(StaffRequiredMixin, CreateView):
     model = Menu
@@ -95,6 +92,8 @@ class MealOrderCreateView(CreateView):
 
 class MenuOrderListView(StaffRequiredMixin, ListView):
     """Employee orders by menu"""
+
+    paginate_by = 10
 
     def get_queryset(self):
         return MealOrder.objects.filter(menu=self.kwargs["pk"])
