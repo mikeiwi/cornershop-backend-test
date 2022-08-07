@@ -31,6 +31,7 @@ USE_X_FORWARDED_HOST = False
 SESSION_COOKIE_HTTPONLY = True
 
 SERVER_URL = os.getenv("SERVER_URL", default="*")
+SITE_URL = os.getenv("SITE_URL", default="https://nora.cornershop.io")
 
 
 APPEND_SLASH = False
@@ -240,7 +241,7 @@ LOGGING = {
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
-# Menu reminder for the day will be sent at this hour, CLT
+# Menu reminder and checkout time for the day are set here, using CLT timezone
 OFFICE_TIME_ZONE = os.getenv("OFFICE_TIME_ZONE", default="Chile/Continental")
 REMINDER_SENDING_HOUR = os.getenv("REMINDER_SENDING_HOUR", default=9)
 CHECKOUT_HOUR = os.getenv("CHECKOUT_HOUR", default=11)
