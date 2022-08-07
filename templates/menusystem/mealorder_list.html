@@ -1,7 +1,7 @@
 <!-- templates/menusystem/mealorder_list.html -->
 <h2>Orders for menu</h2>
 {% for order in mealorder_list %}
-<p>Order for: {{ order.employee.username }} - {{ order.meal.name }}</p>
+<p>Order for: {{ order.employee.username }} - {{ order.meal.name }} - Customization: {{ order.customization }}</p>
 {% endfor %}
 
 <div class="pagination">
