@@ -1,6 +1,8 @@
 import pytest
 from django.urls import reverse
 
+from model_mommy import mommy
+
 
 @pytest.mark.django_db
 def test_employee_cant_access(client, employee_user, menu):
@@ -16,3 +18,16 @@ def test_admin_access(client, staff_user, menu):
     response = client.get(reverse("menu_orders_list", kwargs={"pk": menu.id}))
 
     assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_menu_orders(client, staff_user, menu):
+    """Only orders for the menu should be listed."""
+    mommy.make("menusystem.MealOrder", menu=menu)
+    mommy.make("menusystem.MealOrder")
+
+    response = client.get(reverse("menu_orders_list", kwargs={"pk": menu.id}))
+
+    context = response.context
+    assert context["mealorder_list"].count() == 1
+    assert response.content.count(b"Order for:") == 1

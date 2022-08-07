@@ -96,4 +96,5 @@ class MealOrderCreateView(CreateView):
 class MenuOrderListView(StaffRequiredMixin, ListView):
     """Employee orders by menu"""
 
-    queryset = MealOrder.objects.all()
+    def get_queryset(self):
+        return MealOrder.objects.filter(menu=self.kwargs["pk"])
