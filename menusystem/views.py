@@ -56,6 +56,8 @@ class MenuUpdateView(StaffRequiredMixin, UpdateView):
 
 
 class MealOrderCreateView(CreateView):
+    """Order checkout view"""
+
     model = MealOrder
 
     def get_context_data(self, **kwargs):
@@ -89,3 +91,9 @@ class MealOrderCreateView(CreateView):
             self.request, f"Your meal: <b>{form.instance.meal.name}</b> was registered!"
         )
         return HttpResponseRedirect(self.request.path_info)
+
+
+class MenuOrderListView(StaffRequiredMixin, ListView):
+    """Employee orders by menu"""
+
+    queryset = MealOrder.objects.all()
