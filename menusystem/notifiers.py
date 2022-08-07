@@ -1,6 +1,9 @@
+import logging
 import os
 
 from slack_sdk import WebClient
+
+logger = logging.getLogger(__name__)
 
 
 def slack_notifier(message: str):
@@ -10,3 +13,4 @@ def slack_notifier(message: str):
     client = WebClient(token=token)
 
     client.chat_postMessage(channel=channel_id, text=message)
+    logger.info(f"Slack Message Sent: '{message}'")
