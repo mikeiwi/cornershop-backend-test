@@ -15,10 +15,12 @@ Including another URLconf
 """
 from django.contrib.auth import views as auth_views
 from django.urls import include, path
+from django.views.generic import RedirectView
 
 from .utils.healthz import healthz
 
 urlpatterns = [
+    path("", RedirectView.as_view(pattern_name="menu", permanent=False)),
     path("healthz", healthz, name="healthz"),
     path("login", auth_views.LoginView.as_view(), name="login"),
     path("logout", auth_views.LogoutView.as_view(), name="logout"),

@@ -240,6 +240,7 @@ LOGGING = {
 
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
+LOGIN_URL = '/login'
 
 # Menu reminder and checkout time for the day are set here, using CLT timezone
 OFFICE_TIME_ZONE = os.getenv("OFFICE_TIME_ZONE", default="Chile/Continental")

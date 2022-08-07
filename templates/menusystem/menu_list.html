@@ -1,7 +1,7 @@
 <!-- templates/menusystem/menu_list.html -->
 <h2>Menu</h2>
 {% for menu in menu_list %}
-<p>Menu for:<a href="#">{{ menu.date }} by {{ menu.author.username }}</a></p>
+<p>Menu for: <a href="{% url 'menu_update' menu.id %}">{{ menu.date }}</a> by {{ menu.author.username }} - <a href="{% url 'menu_orders_list' menu.id %}">Check orders</a></p>
 {% endfor %}
 
 <div class="pagination">
@@ -22,3 +22,4 @@
     </span>
 </div>
 
+<p><a href="{% url 'logout' %}">Logout</a></p>
