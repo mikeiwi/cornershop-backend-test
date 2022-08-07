@@ -18,7 +18,7 @@ def test_message_request(mocker):
 
 
 def test_logging_success(mocker, caplog):
-    """On slack post success, a info message should be logged"""
+    """On slack post success, an info message should be logged"""
     caplog.set_level(logging.INFO)
     slack_mock = mocker.patch("slack_sdk.WebClient.chat_postMessage")
 
@@ -29,7 +29,7 @@ def test_logging_success(mocker, caplog):
 
 
 def test_logging_error(mocker, caplog):
-    """On slack post success, a info message should be logged"""
+    """On slack post error, an error message should be logged"""
     caplog.set_level(logging.ERROR)
     slack_mock = mocker.patch("slack_sdk.WebClient.chat_postMessage")
     slack_mock.side_effect = SlackApiError("error message", {})
