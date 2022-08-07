@@ -70,7 +70,7 @@ def test_anonymous_existing_user_success(client, menu):
     user.save()
 
     meal = menu.meals.first()
-    response = client.post(
+    client.post(
         reverse("meal_order_create", kwargs={"pk": menu.id}),
         data={"meal": meal.id, "username": user.username, "password": "meowpassword"},
     )
@@ -102,7 +102,6 @@ def test_anonymous_existing_user_existing_order(client, menu):
     assert b"Order for this user already exists" in response.content
 
 
-
 @pytest.mark.django_db
 def test_anonymous_wrong_credentials(client, menu):
     """If provided credentials are incorrect, order should not checkout"""
@@ -125,7 +124,7 @@ def test_anonymous_wrong_credentials(client, menu):
 def test_signup_fow_new_user(client, menu):
     """If username is not found, a guest checkout should be performed"""
     meal = menu.meals.first()
-    response = client.post(
+    client.post(
         reverse("meal_order_create", kwargs={"pk": menu.id}),
         data={"meal": meal.id, "username": "new_user", "password": "password"},
     )

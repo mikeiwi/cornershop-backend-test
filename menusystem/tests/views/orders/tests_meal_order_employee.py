@@ -6,9 +6,8 @@ from django.conf import settings
 from django.urls import reverse
 
 import pytz
-from model_mommy import mommy
 
-from menusystem.models import Meal, MealOrder
+from menusystem.models import MealOrder
 
 
 @pytest.mark.django_db

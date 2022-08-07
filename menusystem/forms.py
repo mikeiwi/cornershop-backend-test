@@ -82,7 +82,9 @@ class MealOrderForm(forms.ModelForm):
             user_signup_validator = UserSignUpValidator()
 
             # authentication flow
-            first_validator.set_next(can_authenticate_validator).set_next(is_new_order_validator)
+            first_validator.set_next(can_authenticate_validator).set_next(
+                is_new_order_validator
+            )
 
             #  signup flow
             can_authenticate_validator.set_error(is_new_user_validator).set_next(
@@ -93,6 +95,7 @@ class MealOrderForm(forms.ModelForm):
         if error:
             raise ValidationError(error)
 
+        cleaned_data["employee"] = request["user"]
         return cleaned_data
 
 
