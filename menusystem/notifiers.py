@@ -2,6 +2,7 @@ import logging
 import os
 
 from slack_sdk import WebClient
+from slack_sdk.errors import SlackApiError
 
 logger = logging.getLogger(__name__)
 
@@ -12,5 +13,8 @@ def slack_notifier(message: str):
 
     client = WebClient(token=token)
 
-    client.chat_postMessage(channel=channel_id, text=message)
-    logger.info(f"Slack Message Sent: '{message}'")
+    try:
+        client.chat_postMessage(channel=channel_id, text=message)
+        logger.info(f"Slack Message Sent: '{message}'")
+    except SlackApiError as e:
+        logger.error(f"Error sending message: {e}")
