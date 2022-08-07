@@ -1,7 +1,5 @@
 import logging
 
-import pytest
-
 from slack_sdk.errors import SlackApiError
 
 from menusystem.notifiers import slack_notifier
@@ -20,7 +18,7 @@ def test_message_request(mocker):
 def test_logging_success(mocker, caplog):
     """On slack post success, an info message should be logged"""
     caplog.set_level(logging.INFO)
-    slack_mock = mocker.patch("slack_sdk.WebClient.chat_postMessage")
+    mocker.patch("slack_sdk.WebClient.chat_postMessage")
 
     message = "My awesome message"
     slack_notifier(message)

@@ -1,6 +1,8 @@
 import os
 
 from celery import Celery
+from celery.schedules import crontab
+from django.conf import settings as dj_settings
 
 from .envtools import getenv
 
@@ -68,3 +70,12 @@ settings = CelerySettings()
 app = Celery("backend_test")
 app.config_from_object(settings)
 app.autodiscover_tasks()
+
+app.conf.timezone = dj_settings.OFFICE_TIME_ZONE
+
+app.conf.beat_schedule = {
+    "menu-reminder-daily": {
+        "task": "menusystem.tasks.send_daily_reminder_task",
+        "schedule": crontab(minute=0, hour=dj_settings.REMINDER_SENDING_HOUR),
+    },
+}

@@ -5,12 +5,15 @@ from django.utils import timezone
 
 import pytz
 
+from backend_test.celery import app
+
 from .menu_reminder import MenuReminder
 from .models import Menu
 
 logger = logging.getLogger(__name__)
 
 
+@app.task
 def send_daily_reminder_task():
     """Send daily menu reminder."""
     from menusystem.notifiers import slack_notifier
