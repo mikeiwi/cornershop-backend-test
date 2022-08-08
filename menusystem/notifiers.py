@@ -1,6 +1,8 @@
 import logging
 import os
 
+from django.conf import settings
+
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 
@@ -8,8 +10,8 @@ logger = logging.getLogger(__name__)
 
 
 def slack_notifier(message: str):
-    token = os.environ.get("SLACK_BOT_TOKEN")
-    channel_id = os.environ.get("SLACK_CHANNEL_ID")
+    token = settings.SLACK_BOT_TOKEN
+    channel_id = settings.SLACK_CHANNEL_ID
 
     client = WebClient(token=token)
 

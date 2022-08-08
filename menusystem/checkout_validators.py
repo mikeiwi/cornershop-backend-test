@@ -107,7 +107,7 @@ class CanAuthenticateValidator(AbstractHandler):
 
 
 class IsNewUserValidator(AbstractHandler):
-    error_message = "User not found"
+    error_message = "Wrong provided credentials"
 
     def validate(self, request: Any):
         """Validates if a user with the username does NOT exist."""

@@ -246,3 +246,7 @@ LOGIN_URL = "/login"
 OFFICE_TIME_ZONE = os.getenv("OFFICE_TIME_ZONE", default="Chile/Continental")
 REMINDER_SENDING_HOUR = os.getenv("REMINDER_SENDING_HOUR", default=9)
 CHECKOUT_HOUR = os.getenv("CHECKOUT_HOUR", default=11)
+
+# Slack config
+SLACK_BOT_TOKEN = os.getenv("SLACK_BOT_TOKEN")
+SLACK_CHANNEL_ID = os.getenv("SLACK_CHANNEL_ID")

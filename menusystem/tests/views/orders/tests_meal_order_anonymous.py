@@ -117,7 +117,7 @@ def test_anonymous_wrong_credentials(client, menu):
 
     assert MealOrder.objects.count() == 0
 
-    assert b"User not found" in response.content
+    assert b"Wrong provided credentials" in response.content
 
 
 @pytest.mark.django_db
